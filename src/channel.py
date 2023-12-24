@@ -25,12 +25,36 @@ class Channel:
         self.video_count = inf['items'][0]['statistics']['videoCount']
         self.view_count = inf['items'][0]['statistics']['viewCount']
 
-    def __repr__(self):
-        return self.title
-
     @property
     def channel_id(self):
         return self.__channel_id
+
+    def __str__(self):
+        return f"{self.title} ({self.url})"
+
+    def __repr__(self):
+        return self.title
+
+    def __add__(self, other):
+        return int(self.subscriber_count) + int(other.subscriber_count)
+
+    def __sub__(self, other):
+        return int(self.subscriber_count) - int(other.subscriber_count)
+
+    def __gt__(self, other):
+        return int(self.subscriber_count) > int(other.subscriber_count)
+
+    def __ge__(self, other):
+        return int(self.subscriber_count) >= int(other.subscriber_count)
+
+    def __lt__(self, other):
+        return int(self.subscriber_count) < int(other.subscriber_count)
+
+    def __le__(self, other):
+        return int(self.subscriber_count) <= int(other.subscriber_count)
+
+    def __eq__(self, other):
+        return int(self.subscriber_count) == int(other.subscriber_count)
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
@@ -54,6 +78,5 @@ class Channel:
     def atr_to_dict(self):
         return self.__dict__
 
-
-mp = Channel('UC-OVMPlMA3-YCIeg4z5z23A')
-pprint(mp.atr_to_dict())
+# mp = Channel('UC-OVMPlMA3-YCIeg4z5z23A')
+# pprint(mp.atr_to_dict())
