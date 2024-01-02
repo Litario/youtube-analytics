@@ -1,6 +1,5 @@
 import json
 import os
-from pprint import pprint
 
 from googleapiclient.discovery import build
 
@@ -15,15 +14,18 @@ class Channel:
         Экземпляр инициализируется id канала.
         Дальше все данные будут подтягиваться по API.
         """
-        inf = self.youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
 
         self.__channel_id = channel_id
         self.url = f"https://www.youtube.com/channel/{channel_id}"
-        self.title = inf['items'][0]['snippet']['title']
-        self.description = inf['items'][0]['snippet']['description']
-        self.subscriber_count = inf['items'][0]['statistics']['subscriberCount']
-        self.video_count = inf['items'][0]['statistics']['videoCount']
-        self.view_count = inf['items'][0]['statistics']['viewCount']
+        yt_info: dict = (self.__class__.youtube.
+                         channels().list(id=channel_id,
+                                         part='snippet,statistics').execute())
+        channel_items = yt_info['items'][0]
+        self.title = channel_items['snippet']['title']
+        self.description = channel_items['snippet']['description']
+        self.subscriber_count = channel_items['statistics']['subscriberCount']
+        self.video_count = channel_items['statistics']['videoCount']
+        self.view_count = channel_items['statistics']['viewCount']
 
     @property
     def channel_id(self):
@@ -58,8 +60,8 @@ class Channel:
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
-        inf = self.youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
-        print(json.dumps(inf, indent=2, ensure_ascii=False))
+        yt_info = self.__class__.youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
+        print(json.dumps(yt_info, indent=2, ensure_ascii=False))
 
     @classmethod
     def get_service(cls):
@@ -78,5 +80,8 @@ class Channel:
     def atr_to_dict(self):
         return self.__dict__
 
+
 # mp = Channel('UC-OVMPlMA3-YCIeg4z5z23A')
-# pprint(mp.atr_to_dict())
+# pprint(mp.__dict__)
+# print(mp.__class__)
+# print(type(mp).__class__)
