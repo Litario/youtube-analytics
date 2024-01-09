@@ -50,17 +50,17 @@ class PlayList:
         video_ids: list[str] = [video['contentDetails']['videoId'] for video in self.__playlist_videos['items']]
 
         ## словарь вида {url : int(количество лайков)}
-        video_dict = {}
+        dict1 = {}
         for video_id in video_ids:
             vd = Video(video_id)
-            video_dict[vd.url] = int(vd.like_count)
+            dict1[vd.url] = int(vd.like_count)
 
         ## словарь вида {int(количество лайков) : [url}
-        video_like_dict = {}
-        for k, v in video_dict.items():
-            video_like_dict[v] = video_like_dict.get(v, []) + [k]
+        dict2 = {}
+        for k, v in dict1.items():
+            dict2[v] = dict2.get(v, []) + [k]
 
-        return video_like_dict[max(video_like_dict)]
+        return dict2[max(dict2)]
 
 
 # pl = PlayList('PLv_zOGKKxVpj-n2qLkEM2Hj96LO6uqgQw')
