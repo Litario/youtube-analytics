@@ -16,11 +16,13 @@ class Video:
         self.video_id = video_id
 
         self.url = f"https://youtu.be/{self.video_id}"
+
         video_response = (self.__class__.youtube.videos().
                           list(part='snippet,statistics,'
                                     'contentDetails,topicDetails', id=self.video_id).
                           execute())
         video_items = video_response['items'][0]
+
         self.title = video_items['snippet']['title']
         self.view_count = video_items['statistics']['viewCount']
         self.like_count = video_items['statistics']['likeCount']
@@ -39,3 +41,4 @@ class PLVideo(Video):
         """
         super().__init__(video_id)
         self.playlist_id = playlist_id
+
