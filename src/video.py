@@ -13,22 +13,28 @@ class Video:
         Экземпляр инициализируется id видео.
         Дальше все данные будут подтягиваться по API.
         """
-        self.video_id = video_id
+        try:
+            self.video_id = video_id
 
-        self.url = f"https://youtu.be/{self.video_id}"
+            self.url = f"https://youtu.be/{self.video_id}"
 
-        video_response = (self.__class__.youtube.videos().
-                          list(part='snippet,statistics,'
-                                    'contentDetails,topicDetails', id=self.video_id).
-                          execute())
-        video_items = video_response['items'][0]
+            video_response = (self.__class__.youtube.videos().
+                              list(part='snippet,statistics,'
+                                        'contentDetails,topicDetails', id=self.video_id).
+                              execute())
+            video_items = video_response['items'][0]
 
-        self.title = video_items['snippet']['title']
-        self.view_count = video_items['statistics']['viewCount']
-        self.like_count = video_items['statistics']['likeCount']
+            self.title = video_items['snippet']['title']
+            self.view_count = video_items['statistics']['viewCount']
+            self.like_count = video_items['statistics']['likeCount']
+        except IndexError:
+            print('Неправильный id видео')
+            self.url = self.title = self.view_count = self.like_count = None
+        except Exception:
+            print('Неизвестная ошибка')
 
     def __str__(self):
-        return self.title
+        return str(self.title)
 
 
 class PLVideo(Video):
@@ -41,4 +47,3 @@ class PLVideo(Video):
         """
         super().__init__(video_id)
         self.playlist_id = playlist_id
-
